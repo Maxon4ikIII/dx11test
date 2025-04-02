@@ -46,10 +46,42 @@ float3 rotY(float3 pos, float a)
 VS_OUTPUT VS(uint vID : SV_VertexID)
 {
     VS_OUTPUT output = (VS_OUTPUT)0;
-    float2 quad[6] = { -1, -1, 1, -1, -1, 1, 1, -1, 1, 1, -1, 1 };
-    float2 p = quad[vID];
-    float4 pos = float4(quad[vID], 0, 1);
+    float2 quadUI[4] = {0,0,1,0,1,1,0,1};
+    float3 quad[8];
+    quad[0] = float3(1, -1, -1);
+    quad[1] = float3(1, 1, -1);
+    quad[2] = float3(-1, 1, -1);
+    quad[3] = float3(-1, -1, -1);
+    quad[4] = float3(1, -1, 1);
+    quad[5] = float3(1, 1, 1);
+    quad[6] = float3(-1, 1, 1);
+    quad[7] = float3(-1, -1, 1);
+
+
+    int ind[36] = {
+    0, 1, 3,
+    1, 2, 3,
+    1, 5, 2,
+    5, 6, 2,
+    5, 4, 6,
+    4, 7, 6,
+    4, 1, 0,
+    4, 5, 1,
+    4, 0, 7,
+    0, 3, 7,
+    3, 2, 6,
+    3, 6, 7 };
+
+
+    int v = ind[vID];
+
+    float4 pos = float4(quad[v], 1);
+
+
+    
+    
     output.pos = mul(pos, mul(view[0], proj[0]));
-    output.uv = float2(1, -1) * p / 2. + .5;
+    float2 p = quadUI[vID%4];
+    output.uv = p;
     return output;
 }
